@@ -60,10 +60,10 @@ function Update-PSharp {
         [Parameter(Mandatory = $true)]
         [string]$FileName,
         [Parameter(Mandatory = $true)]
-        [string]$UpdateString,
+        [string[]]$UpdateString,
         [Parameter(Mandatory = $true)]
         [ValidateSet("Using", "Namespace", "Class", "Method")]
-        [switch]$UpdateSection
+        [string]$UpdateSection
     )
     BEGIN {
         if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
@@ -85,14 +85,32 @@ function Update-PSharp {
     }
     PROCESS {
         if (Test-Path -Path $file) {
-            #work with the updating of 
+            $regex = [regex] '^using\w+;'
+            #work with the updating of cs file
             $UpdateSection = $UpdateSection.ToString().ToLower()
             switch ($UpdateSection) {
-                "using" {  }
-                "namespace" {  }
-                "class" {  }
-                "method" {  }
-                Default {}
+                "using" {
+                    foreach ($i in $UpdateString) {
+                        if ($i -notlike "*;") {$i = "$i;"}
+                        if ($i -notlike "using*") {$i = "using $i"}
+                        $original = Get-Content $file
+                        if ($original -notcontains $i) {
+                            $pos = [array]::IndexOf($original, $original -match $regex)
+                            $newLine = $original[0..($pos - 1)], $i, $original[$pos..($original.Length - 1)]
+                            $newLine | Set-Content $file
+                        }
+                    }
+                }
+                "namespace" {
+                    #not working yet 
+                }
+                "class" {
+                    #not working yet
+                }
+                "method" {
+                    #not working yet
+                }
+                Default { }
             }
         }
         else {
@@ -106,4 +124,4 @@ function Find-Namespace {
 }
 #New-PSharp -Path C:\Users\David\Downloads\test -FileName Testing6
 #New-PSharp -Path C:\Users\David\Downloads\test -FileName testing$(Get-Random) -UsingStatements "System.Windows.Forms", "System.Diagostics", "System.Automation"
-Export-ModuleMember -Function New-PSharp
+#Export-ModuleMember -Function New-PSharp
