@@ -7,7 +7,7 @@ schema: 2.0.0
 # New-PSharp
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Creates new C# file
 
 ## SYNTAX
 
@@ -16,21 +16,19 @@ New-PSharp [[-Path] <String>] [-FileName] <String> [[-UsingStatements] <String[]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Creates C# files from the given parameters
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> New-PSharp -Path .\pathtoproject -FileName newcs
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
 ### -FileName
-{{Fill FileName Description}}
+Name of the file to be created. This is also the name of the C# class inside the file.
 
 ```yaml
 Type: String
@@ -45,7 +43,7 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{Fill Path Description}}
+Directory that the file should be created in.
 
 ```yaml
 Type: String
@@ -60,7 +58,7 @@ Accept wildcard characters: False
 ```
 
 ### -UsingStatements
-{{Fill UsingStatements Description}}
+Optional using statements to be included in the output.
 
 ```yaml
 Type: String[]
@@ -84,6 +82,7 @@ Accept wildcard characters: False
 ### System.Object
 
 ## NOTES
+Author: C. David Littlejohn
 
 ## RELATED LINKS
 
