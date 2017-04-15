@@ -2,36 +2,39 @@
     [CmdletBinding()]
     Param(
         [string]$Path,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$FileName,
         [string[]]$UsingStatements
     )
     BEGIN {
-        if($Path.Substring($Path.Length-1, 1) -ne "\"){
-            if([System.IO.Path]::GetExtension($FileName)){
+        if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
+            if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
-            } else{
+            }
+            else {
                 $file = Join-Path -Path $Path -ChildPath "$FileName.cs"
             }
-        } else {
-            if([System.IO.Path]::GetExtension($FileName)){
-                $file = Join-Path -Path $Path.Substring(0, $Path.Length-1) -ChildPath  $FileName
-            } else{
-                $file = Join-Path -Path $Path.Substring(0, $Path.Length-1) -ChildPath  "$FileName.cs"
+        }
+        else {
+            if ([System.IO.Path]::GetExtension($FileName)) {
+                $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  $FileName
+            }
+            else {
+                $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  "$FileName.cs"
             }
         }
     }
     PROCESS {
-        if(Test-Path -Path $file){
+        if (Test-Path -Path $file) {
             Write-Error "File already exists. Choose another file name."
             return
-        }else {
+        }
+        else {
             New-Item -Path $file -ItemType File -Force | Out-Null
-            if($UsingStatements){
-                $using = New-Object System.Collections.ArrayList($null)
-                for($i = 0; $i -lt $UsingStatements.Count; $i++){
-                    #not working yet
-                    $using.Add("using $($UsingStatements[$i]);")
+            if ($UsingStatements) {
+                [string]$using = $null
+                for ($i = 0; $i -lt $UsingStatements.Count; $i++) {
+                    $using += "$($UsingStatements[$i]);$([Environment]::NewLine)"
                 }
             }
             $csContent = @"
@@ -51,35 +54,38 @@ class $($(Get-Item $file).BaseName)
     }
     END {}
 }
-function Update-PSharp{
+function Update-PSharp {
     [CmdletBinding()]
     Param(
         [string]$Path,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$FileName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$UpdateString,
-        [Parameter(Mandatory=$true)]
-        [ValidateSet("Using","Namespace","Class","Method")]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Using", "Namespace", "Class", "Method")]
         [switch]$UpdateSection
     )
     BEGIN {
-        if($Path.Substring($Path.Length-1, 1) -ne "\"){
-            if([System.IO.Path]::GetExtension($FileName)){
+        if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
+            if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
-            } else{
+            }
+            else {
                 $file = Join-Path -Path $Path -ChildPath "$FileName.cs"
             }
-        } else {
-            if([System.IO.Path]::GetExtension($FileName)){
-                $file = Join-Path -Path $Path.Substring(0, $Path.Length-1) -ChildPath  $FileName
-            } else{
-                $file = Join-Path -Path $Path.Substring(0, $Path.Length-1) -ChildPath  "$FileName.cs"
+        }
+        else {
+            if ([System.IO.Path]::GetExtension($FileName)) {
+                $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  $FileName
+            }
+            else {
+                $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  "$FileName.cs"
             }
         }
     }
     PROCESS {
-        if(Test-Path -Path $file){
+        if (Test-Path -Path $file) {
             #work with the updating of 
             $UpdateSection = $UpdateSection.ToString().ToLower()
             switch ($UpdateSection) {
@@ -89,11 +95,12 @@ function Update-PSharp{
                 "method" {  }
                 Default {}
             }
-        } else{
+        }
+        else {
             Write-Error "File does not exist. Create a new .cs using New-PSharp."
         }
     }
     END {}
 }
 #New-PSharp -Path C:\Users\David\Downloads\test -FileName Testing6
-New-PSharp -Path C:\Users\David\Downloads\test -FileName testing10 -UsingStatements "System.Windows.Forms"
+#New-PSharp -Path C:\Users\David\Downloads\test -FileName testing$(Get-Random) -UsingStatements "System.Windows.Forms", "System.Diagostics", "System.Automation"
