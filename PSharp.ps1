@@ -33,12 +33,17 @@
             New-Item -Path $file -ItemType File -Force | Out-Null
             if ($UsingStatements) {
                 [string]$using = $null
-                for ($i = 0; $i -lt $UsingStatements.Count; $i++) {
-                    $using += "$($UsingStatements[$i]);$([Environment]::NewLine)"
+                foreach ($i in $UsingStatements) {
+                    if($i -notlike "*System;" -and $i -notlike "*System.Windows;"){
+                        if ($i -notlike "*;") {$i = "$i;"}
+                        if ($i -notlike "using*") {$i = "using $i"}
+                        $using += "$i$([Environment]::NewLine)"
+                    }
                 }
             }
             $csContent = @"
 using System;
+using System.Windows;
 $using
 class $($(Get-Item $file).BaseName)
 {
