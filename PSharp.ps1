@@ -158,6 +158,4 @@ function Update-PSharp {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
-#New-PSharp -Path C:\Users\David\Downloads\test -FileName Testing6
-#New-PSharp -Path C:\Users\David\Downloads\test -FileName testing$(Get-Random) -UsingStatements "System.Windows.Forms", "System.Diagostics", "System.Automation"
 #Export-ModuleMember -Function New-PSharp
