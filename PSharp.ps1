@@ -54,12 +54,19 @@
 using System;
 using System.Windows;
 $using
+
 class $($(Get-Item $file).BaseName)
 {
     static void Main(string[] args){
-    
+        
     }
-    public SampleMethod(){
+    public PublicMethod(){
+        
+    }
+    private PrivateMethod(){
+        
+    }
+    protected ProtectedMethod(){
         
     }
 }
@@ -81,7 +88,7 @@ function Update-PSharp {
         [Parameter(Mandatory = $true)]
         [string[]]$UpdateString,
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Using", "Namespace", "Class", "Method")]
+        [ValidateSet("Using", "Namespace", "Class")]
         [string]$UpdateSection
     )
     BEGIN {
@@ -110,13 +117,12 @@ function Update-PSharp {
     PROCESS {
         Write-Verbose "[PROCESS] Checking to see if $file already exists"
         if (Test-Path -Path $file) {
-            $regex = [regex] '^using\w+;'
-            #work with the updating of cs file
             Write-Verbose "[PROCESS] Checking update section"
             $UpdateSection = $UpdateSection.ToString().ToLower()
             Write-Verbose "[PROCESS] Section to be updated is $UpdateSection"
             switch ($UpdateSection) {
                 "using" {
+                    $regex = [regex] '^using\w+;'
                     Write-Verbose "[PROCESS][switch] $UpdateSection"
                     foreach ($i in $UpdateString) {
                         if ($i -notlike "*;") {$i = "$i;"}
@@ -137,16 +143,62 @@ function Update-PSharp {
                     }
                 }
                 "namespace" {
+                    $regex = [regex] "namespace.+"
                     Write-Verbose "[PROCESS][switch] $UpdateSection"
-                    #not working yet 
+                    $content = Get-Content $file
+                    $content | ForEach-Object {
+                        if ($_ -match $regex) {
+                            if ($_ -like "*{") {
+                                Write-Verbose "[PROCESS][switch] Formatting new namespace with { on a new line"
+                                $namespace = "namespace $UpdateString$([Environment]::NewLine){"
+                            }
+                            else {
+                                Write-Verbose "[PROCESS][switch] Formatting new namespace as is"
+                                $namespace = "namespace $UpdateString"
+                            }
+                            $num++
+                        }
+                    }
+                    Write-Verbose "[PROCESS][switch] $num namespace(es) found"
+                    if ($num -eq 1) {
+                        try {
+                            $content | ForEach-Object {
+                                $_ -replace $regex, $namespace
+                            } | Set-Content $file -Force
+                            Write-Verbose "[PROCESS][switch] $file updated"
+                        } catch {
+                            Write-Error "Unable to update $file"
+                        }
+                    }
                 }
                 "class" {
+                    $regex = [regex] "class.+"
                     Write-Verbose "[PROCESS][switch] $UpdateSection"
-                    #not working yet
-                }
-                "method" {
-                    Write-Verbose "[PROCESS][switch] $UpdateSection"
-                    #not working yet
+                    $content = Get-Content $file
+                    $content | ForEach-Object {
+                        if ($_ -match $regex) {
+                            if ($_ -like "*{") {
+                                Write-Verbose "[PROCESS][switch] Formatting new class with { on a new line"
+                                $class = "class $UpdateString$([Environment]::NewLine){"
+                            }
+                            else {
+                                Write-Verbose "[PROCESS][switch] Formatting new class as is"
+                                $class = "class $UpdateString"
+                            }
+                            $num++
+                        }
+                    }
+                    Write-Verbose "[PROCESS][switch] $num class(es) found"
+                    if ($num -eq 1) {
+                        try {
+                            $content | ForEach-Object {
+                                $_ -replace $regex, $class
+                            } | Set-Content $file -Force
+                            Write-Verbose "[PROCESS][switch] $file updated"
+                        } catch {
+                            Write-Error "Unable to update $file"
+                        }
+                    }
                 }
                 Default {
                     Write-Verbose "[PROCESS][switch] Default"
@@ -210,4 +262,4 @@ function GetCsMethods {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
-#Export-ModuleMember -Function New-PSharp
+#Export-ModuleMember -Function *-*

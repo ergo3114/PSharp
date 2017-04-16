@@ -7,16 +7,17 @@ schema: 2.0.0
 # Update-PSharp
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Updates sections of a .cs file
 
 ## SYNTAX
 
 ```
 Update-PSharp [[-Path] <String>] [-FileName] <String> [-UpdateString] <String[]> [-UpdateSection] <String>
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Update using statements, namespaces, classes, and methods.
 
 ## EXAMPLES
 
@@ -90,10 +91,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### None
-
 
 ## OUTPUTS
 
