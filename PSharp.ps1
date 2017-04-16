@@ -158,4 +158,11 @@ function Update-PSharp {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
+function Get-CsMethods{
+    $PSScriptRoot
+    Add-Type -Path ".\src\PSharp.dll"
+    [PSharp.Meta]::GetMethods(".\src\1618433686.cs")
+    $test = [PSharp.Meta]::new().GetMethods("C:\Users\David\Documents\GitHub\PSharp\src\1618433686.cs")
+    $test.GetMethods($(Get-ChildItem "~\src\1618433686.cs").FullName)
+}
 #Export-ModuleMember -Function New-PSharp
