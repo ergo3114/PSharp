@@ -44,7 +44,7 @@
                 foreach ($i in $UsingStatements) {
                     if ($i -notlike "*;") {$i = "$i;"}
                     if ($i -notlike "using*") {$i = "using $i"}
-                    if($i -notlike "*System;" -and $i -notlike "*System.Windows;*"){
+                    if ($i -notlike "*System;" -and $i -notlike "*System.Windows;*") {
                         Write-Verbose "[PROCESS] Using statement: $i"
                         $using += "$i$([Environment]::NewLine)"
                     }
@@ -56,9 +56,11 @@ using System.Windows;
 $using
 class $($(Get-Item $file).BaseName)
 {
-    static void Main(string[] args)
-    {
+    static void Main(string[] args){
     
+    }
+    public SampleMethod(){
+        
     }
 }
 "@
@@ -128,7 +130,8 @@ function Update-PSharp {
                             $newLine = $original[0..($pos - 1)], $i, $original[$pos..($original.Length - 1)]
                             $newLine | Set-Content $file
                             Write-Verbose "[PROCESS] $file updated"
-                        } else {
+                        }
+                        else {
                             Write-Verbose "[PROCESS] Skipping $UpdateString"
                         }
                     }
@@ -158,11 +161,53 @@ function Update-PSharp {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
-function Get-CsMethods{
-    $PSScriptRoot
-    Add-Type -Path ".\src\PSharp.dll"
-    [PSharp.Meta]::GetMethods(".\src\1618433686.cs")
-    $test = [PSharp.Meta]::new().GetMethods("C:\Users\David\Documents\GitHub\PSharp\src\1618433686.cs")
-    $test.GetMethods($(Get-ChildItem "~\src\1618433686.cs").FullName)
+function GetCsMethods {
+    [CmdletBinding()]
+    Param(
+        [string]$Path,
+        [Parameter(Mandatory = $true)]
+        [string]$FileName,
+        [validateSet("All", "Protected", "Private", "Public")]
+        [string]$MethodType = 'All'
+    )
+    BEGIN {
+        Write-Verbose "[START] $($MyInvocation.MyCommand)"
+        $dll = ".\src\PSharp.dll"
+    }
+    PROCESS {
+        if (Test-Path $dll) {
+            Write-Verbose "[PROCESS] Loading $dll"
+            Add-Type -Path $dll
+            $file = [System.IO.Path]::GetFullPath($(Join-Path $Path $FileName))
+            switch ($MethodType) {
+                'All' { 
+                    Write-Verbose "[PROCESS][switch] Getting $MethodType methods"
+                    [PSharp.Meta]::GetAllMethodNames($file) 
+                }
+                'Protected' { 
+                    Write-Verbose "[PROCESS][switch] Getting $MethodType methods"
+                    [PSharp.Meta]::GetProtectedMethodNames($file) 
+                }
+                'Private' { 
+                    Write-Verbose "[PROCESS][switch] Getting $MethodType methods"
+                    [PSharp.Meta]::GetPrivateMethodNames($file) 
+                }
+                'Public' { 
+                    Write-Verbose "[PROCESS][switch] Getting $MethodType methods"
+                    [PSharp.Meta]::GetPublicMethodNames($file) 
+                }
+                Default { 
+                    Write-Verbose "[PROCESS][switch] Getting $MethodType methods"
+                    [PSharp.Meta]::GetAllMethodNames($file) 
+                }
+            }
+        }
+        else {
+            Write-Error "$dll not found, unable to load"
+        }
+    }
+    END {
+        Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
+    }
 }
 #Export-ModuleMember -Function New-PSharp
