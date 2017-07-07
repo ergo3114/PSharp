@@ -12,18 +12,15 @@
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
                 Write-Verbose "[BEGIN] File to be created is $file"
-            }
-            else {
+            } else {
                 $file = Join-Path -Path $Path -ChildPath "$FileName.cs"
                 Write-Verbose "[BEGIN] File to be created is $file"
             }
-        }
-        else {
+        } else {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  $FileName
                 Write-Verbose "[BEGIN] File to be created is $file"
-            }
-            else {
+            } else {
                 $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  "$FileName.cs"
                 Write-Verbose "[BEGIN] File to be created is $file"
             }
@@ -34,8 +31,7 @@
         if (Test-Path -Path $file) {
             Write-Error "File already exists. Choose another file name."
             return
-        }
-        else {
+        } else {
             Write-Verbose "[PROCESS] $file is being created"
             New-Item -Path $file -ItemType File -Force | Out-Null
             if ($UsingStatements) {
@@ -97,18 +93,15 @@ function Update-PSharp {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
                 Write-Verbose "[BEGIN] File to be updated is $file"
-            }
-            else {
+            } else {
                 $file = Join-Path -Path $Path -ChildPath "$FileName.cs"
                 Write-Verbose "[BEGIN] File to be updated is $file"
             }
-        }
-        else {
+        } else {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  $FileName
                 Write-Verbose "[BEGIN] File to be updated is $file"
-            }
-            else {
+            } else {
                 $file = Join-Path -Path $Path.Substring(0, $Path.Length - 1) -ChildPath  "$FileName.cs"
                 Write-Verbose "[BEGIN] File to be updated is $file"
             }
@@ -136,8 +129,7 @@ function Update-PSharp {
                             $newLine = $original[0..($pos - 1)], $i, $original[$pos..($original.Length - 1)]
                             $newLine | Set-Content $file
                             Write-Verbose "[PROCESS] $file updated"
-                        }
-                        else {
+                        } else {
                             Write-Verbose "[PROCESS] Skipping $UpdateString"
                         }
                     }
@@ -151,8 +143,7 @@ function Update-PSharp {
                             if ($_ -like "*{") {
                                 Write-Verbose "[PROCESS][switch] Formatting new namespace with { on a new line"
                                 $namespace = "namespace $UpdateString$([Environment]::NewLine){"
-                            }
-                            else {
+                            } else {
                                 Write-Verbose "[PROCESS][switch] Formatting new namespace as is"
                                 $namespace = "namespace $UpdateString"
                             }
@@ -180,8 +171,7 @@ function Update-PSharp {
                             if ($_ -like "*{") {
                                 Write-Verbose "[PROCESS][switch] Formatting new class with { on a new line"
                                 $class = "class $UpdateString$([Environment]::NewLine){"
-                            }
-                            else {
+                            } else {
                                 Write-Verbose "[PROCESS][switch] Formatting new class as is"
                                 $class = "class $UpdateString"
                             }
@@ -204,8 +194,7 @@ function Update-PSharp {
                     Write-Verbose "[PROCESS][switch] Default"
                 }
             }
-        }
-        else {
+        } else {
             Write-Error "File does not exist. Create a new .cs using New-PSharp."
         }
     }
@@ -253,8 +242,7 @@ function GetCsMethods {
                     [PSharp.Meta]::GetAllMethodNames($file) 
                 }
             }
-        }
-        else {
+        } else {
             Write-Error "$dll not found, unable to load"
         }
     }
@@ -262,12 +250,12 @@ function GetCsMethods {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
-function Get-CsMethods{
+function Get-CsMethods {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$Type
     )
-    BEGIN{
+    BEGIN {
         $source = @"
 using System;
 using System.Collections.Generic;
@@ -292,9 +280,9 @@ namespace PSharp
 "@
         Add-Type $source
     }
-    PROCESS{
+    PROCESS {
         [PSharp.Meta]::GetMet
     }
-    END{}
+    END {}
 }
 #Export-ModuleMember -Function *-*
