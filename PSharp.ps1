@@ -262,4 +262,39 @@ function GetCsMethods {
         Write-Verbose "[END] Completed $($MyInvocation.MyCommand)"
     }
 }
+function Get-CsMethods{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [string]$Type
+    )
+    BEGIN{
+        $source = @"
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+namespace PSharp
+{
+    public class Meta
+    {
+        public List<string> GetMethods(string classType){
+            List<string> list = new List<string>();
+            Type myType = Type.GetType(classType);
+            MethodInfo[] myArrayMethodInfo = myType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            for (int i = 0; i<myArrayMethodInfo.Length; i++)
+            {
+                MethodInfo myMethodInfo = (MethodInfo)myArrayMethodInfo[i];
+                Console.WriteLine(myMethodInfo.Name);
+            }
+            return list;
+        }
+    }
+}
+"@
+        Add-Type $source
+    }
+    PROCESS{
+        [PSharp.Meta]::GetMet
+    }
+    END{}
+}
 #Export-ModuleMember -Function *-*
