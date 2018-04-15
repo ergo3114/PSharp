@@ -54,11 +54,11 @@ function New-PSharpExecutable {
             else{
                 try{
                     $out = "$($Output -split '.').exe"
-                    ."$preFolder\$Folder\csc.exe" $file -out:$Output
+                    ."$preFolder\$Folder\csc.exe" /out:$out $file
                 }
                 catch{
                     $out = "$Output.exe"
-                    ."$preFolder\$Folder\csc.exe" $file -out:$out
+                    ."$preFolder\$Folder\csc.exe" /out:$out $file
                 }
             }
         }
