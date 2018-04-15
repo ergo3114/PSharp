@@ -1,13 +1,26 @@
 ﻿function New-PSharp {
     [CmdletBinding()]
     Param(
-        [string]$Path,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,
+            Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$FileName,
-        [string[]]$UsingStatements
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullorEmpty()]
+        [string]$Path = $null,
+        
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullorEmpty()]
+        [string[]]$UsingStatements,
+
+        [switch]$Overwrite
     )
     BEGIN {
         Write-Verbose "[START] $($MyInvocation.MyCommand)"
+
+        if(!$Path){$Path = Get-Location}
+
         if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
@@ -31,7 +44,7 @@
     }
     PROCESS {
         Write-Verbose "[PROCESS] Checking to see if $file already exists"
-        if (Test-Path -Path $file) {
+        if ((Test-Path -Path $file) -and !$Overwrite) {
             Write-Error "File already exists. Choose another file name."
             return
         }
@@ -41,12 +54,12 @@
             if ($UsingStatements) {
                 Write-Verbose "[PROCESS] Handling the using statements provided by the user"
                 [string]$using = $null
-                foreach ($i in $UsingStatements) {
-                    if ($i -notlike "*;") {$i = "$i;"}
-                    if ($i -notlike "using*") {$i = "using $i"}
-                    if ($i -notlike "*System;" -and $i -notlike "*System.Windows;*") {
-                        Write-Verbose "[PROCESS] Using statement: $i"
-                        $using += "$i$([Environment]::NewLine)"
+                foreach ($UsingStatement in $UsingStatements) {
+                    if ($UsingStatement -notlike "*;") {$UsingStatement = "$UsingStatement;"}
+                    if ($UsingStatement -notlike "using*") {$UsingStatement = "using $UsingStatement"}
+                    if ($UsingStatement -notlike "*System;" -and $UsingStatement -notlike "*System.Windows;*") {
+                        Write-Verbose "[PROCESS] Using statement: $UsingStatement"
+                        $using += "$UsingStatement$([Environment]::NewLine)"
                     }
                 }
             }
@@ -82,17 +95,28 @@ class $($(Get-Item $file).BaseName)
 function Update-PSharp {
     [CmdletBinding()]
     Param(
-        [string]$Path,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,
+            Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$FileName,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullorEmpty()]
+        [string]$Path,
+
         [Parameter(Mandatory = $true)]
         [string[]]$UpdateString,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet("Using", "Namespace", "Class")]
+        [ValidateNotNullorEmpty()]
         [string]$UpdateSection
     )
     BEGIN {
         Write-Verbose "[START] $($MyInvocation.MyCommand)"
+
+        if(!$Path){$Path = Get-Location}
+
         if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
