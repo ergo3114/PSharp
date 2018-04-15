@@ -47,7 +47,7 @@ Describe "New-PSharp" {
         New-PSharp UsingTest -Path "TestDrive:\" -UsingStatements $Using -Overwrite
         $File = Get-Item "TestDrive:\UsingTest.cs"
         $Contents = Get-Content $File
-        $containsWord = $Contents | %{$_ -match $Using}
+        $containsWord = $Contents | ForEach-Object{$_ -match $Using}
         If($containsWord -contains $true)
         {
             $Result = $true
