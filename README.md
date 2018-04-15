@@ -21,13 +21,12 @@ Update-PSharp -Path <path> -FileName <filename> -UpdateString <NewClassName> -Up
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7envtm62lymipy9h?svg=true)](https://ci.appveyor.com/project/ergo3114/psharp)
+[![Build status](https://ci.appveyor.com/api/projects/status/7envtm62lymipy9h/branch/master?svg=true)](https://ci.appveyor.com/project/ergo3114/psharp/branch/master)
 
-## Tests
+### dev
 
-### master
+[![Build status](https://ci.appveyor.com/api/projects/status/7envtm62lymipy9h/branch/dev?svg=true)](https://ci.appveyor.com/project/ergo3114/psharp/branch/dev)
 
-[![Tests status](https://appveyor-shields-badge.herokuapp.com/api/api/testResults/ergo3114/7envtm62lymipy9h/badge.svg)](https://ci.appveyor.com/project/ergo3114/7envtm62lymipy9h)
 
 ## Motivation
 
