@@ -17,6 +17,9 @@ New-PSharp -Path <path> -FileName <filename> -Using System.Windows.Forms
 Update-PSharp -Path <path> -FileName <filename> -UpdateString <NewClassName> -UpdateSection 'Class'
 ```
 
+## Master
+[![Build status](https://ci.appveyor.com/api/projects/status/7envtm62lymipy9h?svg=true)](https://ci.appveyor.com/project/ergo3114/psharp)
+
 ## Motivation
 
 I love PowerShell and wanted a way to manipulate my .cs files.
