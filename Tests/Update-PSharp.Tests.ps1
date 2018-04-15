@@ -47,7 +47,7 @@ Describe "Update-PSharp" {
         $File = Get-Item "TestDrive:\UsingTest.cs"
         $Result = UsingTest -File $File
 
-        $ResultControlled | Should Be $false
+        $ResultControlled | Should Be $true
         $Result | Should Be $ExpectedResult
     }
 }
