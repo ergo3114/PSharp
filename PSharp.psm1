@@ -95,17 +95,28 @@ class $($(Get-Item $file).BaseName)
 function Update-PSharp {
     [CmdletBinding()]
     Param(
-        [string]$Path,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,
+            Position = 0)]
+        [ValidateNotNullorEmpty()]
         [string]$FileName,
+
+        [Paramter(Mandatory = $false)]
+        [ValidateNotNullorEmpty()]
+        [string]$Path,
+
         [Parameter(Mandatory = $true)]
         [string[]]$UpdateString,
+
         [Parameter(Mandatory = $true)]
         [ValidateSet("Using", "Namespace", "Class")]
+        [ValidateNotNullorEmpty()]
         [string]$UpdateSection
     )
     BEGIN {
         Write-Verbose "[START] $($MyInvocation.MyCommand)"
+
+        if(!$Path){$Path = Get-Location}
+
         if ($Path.Substring($Path.Length - 1, 1) -ne "\") {
             if ([System.IO.Path]::GetExtension($FileName)) {
                 $file = Join-Path -Path $Path -ChildPath $FileName
