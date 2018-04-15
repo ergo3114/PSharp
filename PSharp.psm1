@@ -73,13 +73,13 @@ class $($(Get-Item $file).BaseName)
     static void Main(string[] args){
         
     }
-    public PublicMethod(){
+    public void PublicMethod(){
         
     }
-    private PrivateMethod(){
+    private void PrivateMethod(){
         
     }
-    protected ProtectedMethod(){
+    protected void ProtectedMethod(){
         
     }
 }
