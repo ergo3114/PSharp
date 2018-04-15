@@ -11,6 +11,9 @@ Powershell commands to manipulate .cs files
 New-PSharp -Path <path> -FileName <filename>
 ```
 ```powershell
+New-PSharp -Path <path> -FileName <filename> -Overwrite
+```
+```powershell
 New-PSharp -Path <path> -FileName <filename> -Using System.Windows.Forms
 ```
 ```powershell
@@ -18,7 +21,6 @@ Update-PSharp -Path <path> -FileName <filename> -UpdateString <NewClassName> -Up
 ```
 
 ## Branches
-
 ### master
 
 [![Build status](https://ci.appveyor.com/api/projects/status/7envtm62lymipy9h/branch/master?svg=true)](https://ci.appveyor.com/project/ergo3114/psharp/branch/master)
