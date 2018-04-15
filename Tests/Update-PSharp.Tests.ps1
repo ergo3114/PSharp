@@ -1,4 +1,4 @@
-Describe "New-PSharp" {
+Describe "Update-PSharp" {
     #region Import-Module
     try{
         Import-Module ..\PSharp.psm1 -ErrorAction Stop
