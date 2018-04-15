@@ -20,4 +20,4 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction Silen
         }
     }
 
-Export-ModuleMember -Function ($Public | Select -ExpandProperty BaseName)
+Export-ModuleMember -Function ($Public | Select-Object -ExpandProperty BaseName)
