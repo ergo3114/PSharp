@@ -1,11 +1,10 @@
 Describe "New-PSharp" {
     #region Import-Module
     try{
-        Remove-Module PSharp
+        Import-Module ..\PSharp.psm1 -ErrorAction Stop
     }
-    catch{}
-    finally{
-        Import-Module ..\PSharp.psm1
+    catch{
+        Import-Module .\PSharp.psm1
     }
     #endregion
 
