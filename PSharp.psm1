@@ -100,7 +100,7 @@ function Update-PSharp {
         [ValidateNotNullorEmpty()]
         [string]$FileName,
 
-        [Paramter(Mandatory = $false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullorEmpty()]
         [string]$Path,
 
